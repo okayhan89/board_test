@@ -1,0 +1,7 @@
+create table test.board_pro(
+bno int not null auto_increment primary key, 
+subject varchar(50) not null, 
+content text not null, 
+writer varchar(50) not null, 
+reg_date datetime not null, 
+hit int);

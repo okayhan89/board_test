@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,4 +46,40 @@ public class BoardController {
         
         return "redirect://localhost:8080/board";
     }
+    
+    @RequestMapping(value="/{bno}",method=RequestMethod.GET)
+    public ModelAndView view(@PathVariable("bno") int bno) throws Exception{
+        
+        BoardVO board = boardMapper.boardView(bno);
+        boardMapper.hitPlus(bno);
+        
+        return new ModelAndView("boardView","board",board);
+    }
+    
+  //게시글 수정 페이지(GET)
+    @RequestMapping(value="/post/{bno}", method=RequestMethod.GET)
+    public ModelAndView updateForm(@PathVariable("bno") int bno) throws Exception{
+            
+        BoardVO board = boardMapper.boardView(bno);
+        
+        return new ModelAndView("boardUpdate","board",board);
+    }
+        
+    //게시글 수정(PATCH)
+    @RequestMapping(value="/post/{bno}", method=RequestMethod.PATCH)
+    public String update(@ModelAttribute("BoardVO")BoardVO board,@PathVariable("bno") int bno) throws Exception{
+            
+        boardMapper.boardUpdate(board);
+            
+        return "redirect://localhost:8080/board/"+bno;
+    }
+    //게시글 삭제(DELETE)
+    @RequestMapping(value="/post/{bno}", method=RequestMethod.DELETE)
+    public String delete(@PathVariable("bno") int bno) throws Exception{
+            
+        boardMapper.boardDelete(bno);
+            
+        return "redirect://localhost:8080/board";
+    }
+
 }
